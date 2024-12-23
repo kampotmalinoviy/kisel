@@ -52,9 +52,7 @@ public class GraphicsDisplay extends JPanel {
         originalPoint = new double[2];
         selectionRect = new Rectangle2D.Double();
         setBackground(Color.WHITE);
-        BasicStroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.CAP_BUTT,
-                1, new float[]{15, 5, 5, 5, 10, 5, 5, 5}, 0);
-        graphicsStroke = dashed;
+        graphicsStroke = new BasicStroke(3);
         axisStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
         markerStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
@@ -411,21 +409,18 @@ public class GraphicsDisplay extends JPanel {
 
 
 
-    protected void paintAxis(Graphics2D canvas) {
+   protected void paintAxis(Graphics2D canvas) {
         canvas.setStroke(axisStroke);
         canvas.setColor(Color.BLACK);
         canvas.setPaint(Color.BLACK);
         canvas.setFont(axisFont);
         FontRenderContext context = canvas.getFontRenderContext();
+
         if (minX <= 0.0 && maxX >= 0.0) {
             if (Rotate) {
-                canvas.draw(new Line2D.Double(xyToPoint(0, maxX),
-                        xyToPoint(0, minX)));
-
-
+                canvas.draw(new Line2D.Double(xyToPoint(0, maxX), xyToPoint(0, minX)));
             } else {
-                canvas.draw(new Line2D.Double(xyToPoint(0, maxY),
-                        xyToPoint(0, minY)));
+                canvas.draw(new Line2D.Double(xyToPoint(0, maxY), xyToPoint(0, minY)));
             }
 
             paintDashes(canvas);
@@ -437,10 +432,8 @@ public class GraphicsDisplay extends JPanel {
             }
 
             arrow.moveTo(lineEnd.getX(), lineEnd.getY());
-            arrow.lineTo(arrow.getCurrentPoint().getX() + 5,
-                    arrow.getCurrentPoint().getY() + 20);
-            arrow.lineTo(arrow.getCurrentPoint().getX() - 10,
-                    arrow.getCurrentPoint().getY());
+            arrow.lineTo(arrow.getCurrentPoint().getX() + 5, arrow.getCurrentPoint().getY() + 20);
+            arrow.lineTo(arrow.getCurrentPoint().getX() - 10, arrow.getCurrentPoint().getY());
             arrow.closePath();
             canvas.draw(arrow);
             canvas.fill(arrow);
@@ -451,19 +444,17 @@ public class GraphicsDisplay extends JPanel {
                 canvas.rotate(Math.PI / 2, xyToPoint(0, 0).x, xyToPoint(0, 0).y);
             }
 
-            canvas.drawString("y", (float) labelPos.getX() + 10,
-                    (float) (labelPos.getY() - bounds.getY()));
+            canvas.drawString("y", (float) labelPos.getX() + 10, (float) (labelPos.getY() - bounds.getY()));
             if (Rotate) {
                 canvas.rotate(3 * Math.PI / 2, xyToPoint(0, 0).x, xyToPoint(0, 0).y);
             }
         }
+
         if (minY <= 0.0 && maxY >= 0.0) {
             if (Rotate) {
-                canvas.draw(new Line2D.Double(xyToPoint(minY, 0),
-                        xyToPoint(maxY, 0)));
+                canvas.draw(new Line2D.Double(xyToPoint(minY, 0), xyToPoint(maxY, 0)));
             } else {
-                canvas.draw(new Line2D.Double(xyToPoint(minX, 0),
-                        xyToPoint(maxX, 0)));
+                canvas.draw(new Line2D.Double(xyToPoint(minX, 0), xyToPoint(maxX, 0)));
             }
 
             GeneralPath arrow = new GeneralPath();
@@ -472,10 +463,8 @@ public class GraphicsDisplay extends JPanel {
                 lineEnd = xyToPoint(maxY, 0);
             }
             arrow.moveTo(lineEnd.getX(), lineEnd.getY());
-            arrow.lineTo(arrow.getCurrentPoint().getX() - 20,
-                    arrow.getCurrentPoint().getY() - 5);
-            arrow.lineTo(arrow.getCurrentPoint().getX(),
-                    arrow.getCurrentPoint().getY() + 10);
+            arrow.lineTo(arrow.getCurrentPoint().getX() - 20, arrow.getCurrentPoint().getY() - 5);
+            arrow.lineTo(arrow.getCurrentPoint().getX(), arrow.getCurrentPoint().getY() + 10);
             arrow.closePath();
             canvas.draw(arrow);
             canvas.fill(arrow);
@@ -485,13 +474,21 @@ public class GraphicsDisplay extends JPanel {
                 labelPos = xyToPoint(0, maxY);
                 canvas.rotate(Math.PI / 2, xyToPoint(0, 0).x, xyToPoint(0, 0).y);
             }
-            canvas.drawString("x", (float) (labelPos.getX() -
-                    bounds.getWidth() - 10), (float) (labelPos.getY() + bounds.getY()) + 80);
+
+            
+            float yOffset = -5; 
+            for (int i = 0; i <= 10; i++) {
+                double x = minX + i * (maxX - minX) / 10.0;
+                double roundedX = roundToOneDecimal(x);
+                Point2D.Double point = xyToPoint(roundedX, 0);
+                String label = GraphicsDisplay.formatter.format(roundedX);
+                Rectangle2D labelBounds = axisFont.getStringBounds(label, context);
+                canvas.drawString(label, (float) point.getX() - (float) labelBounds.getWidth() / 2, (float) (point.getY() + labelBounds.getHeight() + yOffset));
+            }
             if (Rotate) {
-                canvas.rotate(3 * Math.PI / 2, xyToPoint(0, 0).x, xyToPoint(0, 0).y);
+                canvas.rotate(Math.PI / 2, xyToPoint(0, 0).x, xyToPoint(0, 0).y);
             }
             paintDashes(canvas);
-
         }
     }
 
