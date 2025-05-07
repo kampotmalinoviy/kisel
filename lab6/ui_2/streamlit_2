@@ -1,0 +1,4 @@
+import streamlit as st
+
+st.title("Привет, мир! 👋")
+st.write("Это мой первый сайт на Streamlit!")
