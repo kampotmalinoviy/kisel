@@ -1,0 +1,4 @@
+1;lerka;123;lerka;parents:0.0,scholarship:0.0,scholar:0.0;
+2;anton;12345;anton;parents:500.0,scholarship:160.0,scholar:0.0;food:1000.0;sport:25.0;entertainment:12.0
+3;1;1;1;parents:512.0,scholarship:310.0,scholar:0.0;entertainment:100.0;food:75.0;hobby:50.0;medicine:25.0
+4;ivan;987;ivan;parents:1000.0,scholarship:300.0,scholar:0.0;food:410.0;hobby:50.0
